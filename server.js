@@ -4,6 +4,7 @@ import {ApolloServer,gql} from 'apollo-server'
 import {ApolloServerPluginLandingPageGraphQLPlayground} from 'apollo-server-core'
 import mongoose from 'mongoose';
 import typeDefs from './schemaGql.js'
+import jwt from 'jsonwebtoken'
 
 const mongoUrl=process.env.MONGO_URL
 mongoose.connect(mongoUrl,{
@@ -23,6 +24,13 @@ import resolvers from './resolvers.js'
 const server = new ApolloServer({ 
     typeDefs, 
     resolvers,
+    context:({req})=>{
+        const {authorization}=req.headers
+        if(authorization){
+            const {userId}= jwt.verify(authorization,process.env.JWT_SECRET)
+            return {userId}
+        }
+    },
     plugins:[
         ApolloServerPluginLandingPageGraphQLPlayground()
     ]
