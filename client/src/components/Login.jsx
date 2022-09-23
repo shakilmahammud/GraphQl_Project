@@ -1,7 +1,9 @@
+import { useMutation } from '@apollo/client';
 import React from 'react';
 import { useState } from 'react';
 
 export default function Login() {
+    const [login, { data, loading, error, reset }] = useMutation(LOGIN_MUTATION);
     const [value,setValue] =useState({})
     const handleInput =(e)=>{
         setValue({...value,
